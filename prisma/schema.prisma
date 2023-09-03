@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+
+// Specifies what clients should be generated based on the data model (e.g. Prisma Client)
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Specify the details of the data sources Prisma should connect to (e.g. a PostgreSQL database)
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Models in the Prisma schema have two main purposes:
+// Represent the tables in the underlying database
+// Serve as foundation for the generated Prisma Client API
+// Map these models to database tables using Prisma Migrate.
+model User {
+  id    Int     @id @default(autoincrement())
+  email String  @unique
+  name  String?
+  posts Post[]
+}
+
+model Post {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String?
+  published Boolean @default(false)
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  Int
+}
